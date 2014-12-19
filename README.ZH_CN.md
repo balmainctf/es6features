@@ -1,11 +1,12 @@
-# ECMAScript 6 <sup>[git.io/es6features](http://git.io/es6features)</sup>
+# ECMAScript 6 <sup>[中文版](https://github.com/techird/es6features/blob/master/README.ZH_CN.md)</sup>
 
-## Introduction
-ECMAScript 6 is the upcoming version of the ECMAScript standard.  This standard is targeting ratification in June 2015.  ES6 is a significant update to the language, and the first update to the language since ES5 was standardized in 2009. Implementation of these features in major JavaScript engines is [underway now](http://kangax.github.io/es5-compat-table/es6/).
+## 简介
 
-See the [draft ES6 standard](https://people.mozilla.org/~jorendorff/es6-draft.html) for full specification of the ECMAScript 6 language.
+ECMAScript 6 是 ECMAScript 的下一代标准。该标准希望在 2015 年 6 月通过批准。ES6 对 ESMAScript 来说有重要的意义，并且是从 2009 年发布 ES5 标准之后的第一次更新。支持 ES6 新特性的 Javascript 引擎已经在[开发中](http://kangax.github.io/es5-compat-table/es6/)。
 
-ES6 includes the following new features:
+可以参考完整的[ES6标准草案](https://people.mozilla.org/~jorendorff/es6-draft.html)。
+
+ES6 包括下列新特性：
 - [arrows](#arrows)
 - [classes](#classes)
 - [enhanced object literals](#enhanced-object-literals)
@@ -29,23 +30,24 @@ ES6 includes the following new features:
 - [reflect api](#reflect-api)
 - [tail calls](#tail-calls)
 
-## ECMAScript 6 Features
+## ECMAScript 6 特性
 
-### Arrows
-Arrows are a function shorthand using the `=>` syntax.  They are syntactically similar to the related feature in C#, Java 8 and CoffeeScript.  They support both expression and statement bodies.  Unlike functions, arrows share the same lexical `this` as their surrounding code.
+### 推导语法
+
+推导语法使用 `=>` 符号来表示一个函数。该语法类似于 C#、Java8 和 CoffeeScript 的用法。推导语法支持简单的表达式以及语句块。跟普通函数不一样，推导语法中的 `this` 跟推导语法的上下文是一致的。
 
 ```JavaScript
-// Expression bodies
+// 表达式形式
 var odds = evens.map(v => v + 1);
 var nums = evens.map((v, i) => v + i);
 
-// Statement bodies
+// 语句块形式
 nums.forEach(v => {
   if (v % 5 === 0)
     fives.push(v);
 });
 
-// Lexical this
+// 使用上下文 this
 var bob = {
   _name: "Bob",
   _friends: [],
@@ -56,27 +58,41 @@ var bob = {
 }
 ```
 
-### Classes
+### 类
 ES6 classes are a simple sugar over the prototype-based OO pattern.  Having a single convenient declarative form makes class patterns easier to use, and encourages interoperability.  Classes support prototype-based inheritance, super calls, instance and static methods and constructors.
 
-```JavaScript
-class SkinnedMesh extends THREE.Mesh {
-  constructor(geometry, materials) {
-    super(geometry, materials);
+ES6 里的类可以说是基于 prototype 模式的面向对象语法的语法糖。使用独立并且方便的定义方式使得类定义更加易用和互通。类支持基于 prototype 的集成、调用父类函数、定义实例方法、静态方法以及构造函数。
 
-    this.idMatrix = SkinnedMesh.defaultMatrix();
-    this.bones = [];
-    this.boneMatrices = [];
-    //...
-  }
-  update(camera) {
-    //...
-    super.update();
-  }
-  static defaultMatrix() {
-    return new THREE.Matrix4();
+```JavaScript
+class Animal {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  },
+  
+  speak() {
+    // 字符串模板请参考后文
+    return `My name is ${this.name}, aged ${this.age}. `;
   }
 }
+
+class Dog extends Animal {
+  constructor(name, age, color) {
+    super(name, age);
+    this.color = color;
+  },
+  
+  speak() {
+    return super() + `A little ${this.color} dog`;
+  },
+  
+  static create() {
+    return new Dog('Tom', 1, 'white');
+  }
+}
+
+console.log(Dog.create().speak());
+
 ```
 
 ### Enhanced Object Literals
