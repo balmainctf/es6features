@@ -59,9 +59,8 @@ var bob = {
 ```
 
 ### 类
-ES6 classes are a simple sugar over the prototype-based OO pattern.  Having a single convenient declarative form makes class patterns easier to use, and encourages interoperability.  Classes support prototype-based inheritance, super calls, instance and static methods and constructors.
 
-ES6 里的类可以说是基于 prototype 模式的面向对象语法的语法糖。使用独立并且方便的定义方式使得类定义更加易用和互通。类支持基于 prototype 的集成、调用父类函数、定义实例方法、静态方法以及构造函数。
+ES6 里的类是基于 prototype 模式的面向对象语法的语法糖。使用独立并且方便的定义方式使得类定义更加易用和互通。类支持基于 prototype 的继承、调用父类函数、定义实例方法、静态方法以及构造函数。
 
 ```JavaScript
 class Animal {
@@ -95,33 +94,43 @@ console.log(Dog.create().speak());
 
 ```
 
-### Enhanced Object Literals
-Object literals are extended to support setting the prototype at construction, shorthand for `foo: foo` assignments, defining methods and making super calls.  Together, these also bring object literals and class declarations closer together, and let object-based design benefit from some of the same conveniences.
+### 增强的字面量写法
+
+增强的字面量对象：
+
+* 支持在创建时指定对象的原型
+* 支持 `foo: foo` 的简写
+* 支持定义方法并且调用父类
+* 支持动态属性名
+ 
+这些特性使得字面量定义和类定义的方式更加一致，并且使基于对象的设计更加方便。
 
 ```JavaScript
 var obj = {
-    // __proto__
+    // __proto__ 指向对象的原型
     __proto__: theProtoObj,
-    // Shorthand for ‘handler: handler’
+    //‘handler: handler’ 的简写
     handler,
-    // Methods
+    // 对象上的方法
     toString() {
-     // Super calls
+     // 调用原型对象上的同名方法
      return "d " + super.toString();
     },
-    // Computed (dynamic) property names
+    // 动态属性名
     [ 'prop_' + (() => 42)() ]: 42
 };
 ```
 
-### Template Strings
+### 字符串模板
 Template strings provide syntactic sugar for constructing strings.  This is similar to string interpolation features in Perl, Python and more.  Optionally, a tag can be added to allow the string construction to be customized, avoiding injection attacks or constructing higher level data structures from string contents.
 
+字符串模板是一个构建字符串的语法糖，跟 Perl、Python 等语言的字符串模板类似。使用 TODO
+
 ```JavaScript
-// Basic literal string creation
+// 基本使用
 `In JavaScript '\n' is a line-feed.`
 
-// Multiline strings
+// 多行字符串
 `In JavaScript this is
  not legal.`
 
@@ -137,49 +146,50 @@ GET`http://foo.org/bar?a=${a}&b=${b}
       "bar": ${bar}}`(myOnReadyStateChangeHandler);
 ```
 
-### Destructuring
-Destructuring allows binding using pattern matching, with support for matching arrays and objects.  Destructuring is fail-soft, similar to standard object lookup `foo["bar"]`, producing `undefined` values when not found.
+### 解构
+
+解构使用模式匹配来查找对象或数组的值。解构操作在匹配失败时不会报错，跟标准的对象属性查找 `foo["bar"]` 一样，在查找失败是返回 `undefined`。
 
 ```JavaScript
-// list matching
+// 数组匹配
 var [a, , b] = [1,2,3];
 
-// object matching
+// 对象匹配
 var { op: a, lhs: { op: b }, rhs: c }
        = getASTNode()
 
-// object matching shorthand
-// binds `op`, `lhs` and `rhs` in scope
+// 快捷方式
+// 在作用域中绑定 `op`, `lhs` 和 `rhs`
 var {op, lhs, rhs} = getASTNode()
 
-// Can be used in parameter position
+// 还可以在参数中使用
 function g({name: x}) {
   console.log(x);
 }
 g({name: 5})
 
-// Fail-soft destructuring
+// 解构失败
 var [a] = [];
 a === undefined;
 
-// Fail-soft destructuring with defaults
+// 解构失败使用默认值
 var [a = 1] = [];
 a === 1;
 ```
 
-### Default + Rest + Spread
-Callee-evaluated default parameter values.  Turn an array into consecutive arguments in a function call.  Bind trailing parameters to an array.  Rest replaces the need for `arguments` and addresses common cases more directly.
+### 函数参数增强（默认值、剩余参数、参数展开）
+定义参数时允许定义默认值。调用函数时允许把数组作为连续的参数传入。允许把剩余的参数转换为数组。剩余参数代替了 `arguments` 的需求，并且在大多数场合下更加直接。
 
 ```JavaScript
-function f(x, y=12) {
-  // y is 12 if not passed (or passed as undefined)
+function f(x, y = 12) {
+  // y 的值是 12 如果没有传入 y 参数（或者传入 undefined）
   return x + y;
 }
 f(3) == 15
 ```
 ```JavaScript
 function f(x, ...y) {
-  // y is an Array
+  // y 是一个数组
   return x * y.length;
 }
 f(3, "hello", true) == 6
@@ -188,12 +198,12 @@ f(3, "hello", true) == 6
 function f(x, y, z) {
   return x + y + z;
 }
-// Pass each elem of array as argument
+// 把数组的元素作为参数调用，相当于 f(1, 2, 3) 和 f.apply(nul, [1, 2, 3]
 f(...[1,2,3]) == 6
 ```
 
-### Let + Const
-Block-scoped binding constructs.  `let` is the new `var`.  `const` is single-assignment.  Static restrictions prevent use before assignment.
+### Let 和 Const 关键字
+允许使用 `let` 和 `const` 关键字来定义块级变量和常量。使用 `const` 关键字定义常量，常量在定义之前，不允许使用。
 
 
 ```JavaScript
@@ -201,19 +211,20 @@ function f() {
   {
     let x;
     {
-      // okay, block scoped name
+      // OK 块级常量
       const x = "sneaky";
-      // error, const
+      // 错误，x 是常量，不允许辅助
       x = "foo";
     }
-    // error, already declared in block
+    // 错误，块内已定义 x
     let x = "inner";
   }
 }
 ```
 
-### Iterators + For..Of
-Iterator objects enable custom iteration like CLR IEnumerable or Java Iteratable.  Generalize `for..in` to custom iterator-based iteration with `for..of`.  Don’t require realizing an array, enabling lazy design patterns like LINQ.
+### 迭代器和 For..Of
+
+迭代器允许定义自定义的迭代操作（跟 CLR 中的 IEnumerable 或 Java 中的 Iteratable类似）。`for..in` 操作和自定义迭代操作可以统一使用 `for..of` 来操作。迭代操作可以不用真正产生一个数组，允许像 LINQ 一样的 LAZY 设计（在迭代时才真正计算）。
 
 ```JavaScript
 let fibonacci = {
@@ -229,14 +240,14 @@ let fibonacci = {
 }
 
 for (var n of fibonacci) {
-  // truncate the sequence at 1000
+  // 在 1000 处结束
   if (n > 1000)
     break;
   print(n);
 }
 ```
 
-Iteration is based on these duck-typed interfaces (using [TypeScript](http://typescriptlang.org) type syntax for exposition only):
+迭代器的定义基于“鸭子类型”的接口检测机制，下面的描述是基于[TypeScripty](http://typescriptlang.org) 的（只是基于，ES6 并不支持 interface 定义）。
 ```TypeScript
 interface IteratorResult {
   done: boolean;
@@ -251,9 +262,12 @@ interface Iterable {
 ```
 
 ### Generators
-Generators simplify iterator-authoring using `function*` and `yield`.  A function declared as function* returns a Generator instance.  Generators are subtypes of iterators which include additional  `next` and `throw`.  These enable values to flow back into the generator, so `yield` is an expression form which returns a value (or throws).
 
-Note: Can also be used to enable ‘await’-like async programming, see also ES7 `await` proposal.
+Generator 使用 `function*` 和 `yield` 关键字来简化迭代器的编写。一个使用 `function*` 定义的函数返回一个 Generator 的实力。Generator 是迭代器的子类型，包含额外的 `next` 和 `throw` 方法。这些方法允许把值回传到 Generator 中，而 `yield` 则是接收回传值（或扔出的异常）的一个表达式。
+
+备注：Generator 同样可以用于 `await` 模式的异步编程，请参照 ES7 中的 `await` 提案。
+
+> 译者注：Generator 还有很多丰富的特性，并不只是在迭代器使用。请参照 [function*]( https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) 的资料。
 
 ```JavaScript
 var fibonacci = {
@@ -276,7 +290,7 @@ for (var n of fibonacci) {
 }
 ```
 
-The generator interface is (using [TypeScript](http://typescriptlang.org) type syntax for exposition only):
+Generator 的接口如下 (使用 [TypeScript](http://typescriptlang.org) 语法来解释):
 
 ```TypeScript
 interface Generator extends Iterator {
