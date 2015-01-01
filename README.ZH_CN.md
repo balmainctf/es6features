@@ -247,7 +247,8 @@ for (var n of fibonacci) {
 }
 ```
 
-迭代器的定义基于“鸭子类型”的接口检测机制，下面的描述是基于[TypeScripty](http://typescriptlang.org) 的（只是基于，ES6 并不支持 interface 定义）。
+迭代器的定义基于“鸭子类型”的接口检测机制，下面的描述是基于[TypeScript](http://typescriptlang.org) 的（只是基于，ES6 并不支持 interface 定义）。
+
 ```TypeScript
 interface IteratorResult {
   done: boolean;
@@ -263,7 +264,7 @@ interface Iterable {
 
 ### Generators
 
-Generator 使用 `function*` 和 `yield` 关键字来简化迭代器的编写。一个使用 `function*` 定义的函数返回一个 Generator 的实力。Generator 是迭代器的子类型，包含额外的 `next` 和 `throw` 方法。这些方法允许把值回传到 Generator 中，而 `yield` 则是接收回传值（或扔出的异常）的一个表达式。
+Generator 使用 `function*` 和 `yield` 关键字来简化迭代器的编写。一个使用 `function*` 定义的函数返回一个 Generator 的实例。Generator 是迭代器的子类型，包含额外的 `next` 和 `throw` 方法。这些方法允许把值回传到 Generator 中，而 `yield` 则是接收回传值（或扔出的异常）的一个表达式。
 
 备注：Generator 同样可以用于 `await` 模式的异步编程，请参照 ES7 中的 `await` 提案。
 
